@@ -2,7 +2,6 @@ from multiprocessing import Manager, Process
 from bluetooth import scanner_worker
 from db import db_worker
 # from bluetooth_scanner import
-import mysql.connector
 import math
 
 
@@ -42,6 +41,11 @@ class Controller:
         self.db_queue = Manager().Queue()
         self.db_process = Process(target=db_worker, args=(self.db_queue,))
 
+    def start(self):
+        self.start_scanner()
+        self.start_db_writer()
+        self.read_scanner_queue()
+
     def aggregate_data(self, data_list):
         # Prepares a dictionary to store the BluetoothData objects.
         bluetooth_data = {}
@@ -76,6 +80,5 @@ class Controller:
 
 if __name__ == "__main__":
     bluetooth_processor = Controller()
-    bluetooth_processor.start_scanner()
-    bluetooth_processor.start_db_writer()
-    bluetooth_processor.read_scanner_queue()
+    bluetooth_processor.start()
+
