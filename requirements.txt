@@ -1,2 +1,3 @@
 # pybluez
 bluepy
+mysql-connector-python
