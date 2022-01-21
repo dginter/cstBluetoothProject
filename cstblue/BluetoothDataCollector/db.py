@@ -44,6 +44,9 @@ class DatabaseWriter:
         cursor = connection.cursor()
         cursor.execute(sql_command)
         connection.commit()
+        results = cursor.fetchall()
+        cursor.close()
+        return results
 
     def db_write(self, data):
 
@@ -67,6 +70,10 @@ class DatabaseWriter:
             self.db_write(data)
 
 
+
 def db_worker(queue):
     db_writer = DatabaseWriter(queue)
     db_writer.read_from_queue()
+
+
+
