@@ -5,8 +5,10 @@ from socket import socket, AF_BLUETOOTH, SOCK_RAW, BTPROTO_HCI, SOL_HCI, HCI_FIL
 import struct
 import time
 import math
-
+from logger import *
 import config
+
+system_ac = "SCAN"
 
 btlib = find_library("bluetooth")
 bluez = CDLL(btlib, use_errno=True)
@@ -75,6 +77,7 @@ class BluetoothScanner(object):
     def scan_forever(self):
         try:
             self.enable_scanning()
+            LOG.info(f"[{system_ac}] Bluetooth scanner started @ {get_current_time()}")
             while True:
                 gathered_data = []
                 current_time = time.time()
@@ -88,11 +91,14 @@ class BluetoothScanner(object):
                     gathered_data.append([addr, rssi, now])
                 # averages data within the gathered_data list
                 self.queue.put(gathered_data)
+                LOG.debug(f"\n[{system_ac}] {len(gathered_data)} sets of data put into scanner queue @ {get_current_time()}") 
         finally:
             self.disable_scanning()
 
 
 def scanner_worker(queue):
+    """Start bluetooth scanner."""
+    
     bs = BluetoothScanner(queue)
     bs.initialize()
     bs.scan_forever()
