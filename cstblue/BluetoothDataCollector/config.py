@@ -11,11 +11,11 @@ Attributes:
     AVERAGE_FREQ (int): The amount of time in seconds that the bluetooth scanner gathers data in one sitting before forwarding it to the scanner.
 """
 
-USER = "bt1"
-PASS = "blueToothTracking_1"
-HOST = "10.24.250.4"
-DB = "blueTooth01"
+USER = ""
+PASS = ""
+HOST = ""
+DB = ""
 
-UNIQUE_ID = "pi_00"
+UNIQUE_ID = ""
 
 AVERAGE_FREQ = 3
