@@ -91,7 +91,7 @@ class BluetoothScanner(object):
                     gathered_data.append([addr, rssi, now])
                 # averages data within the gathered_data list
                 self.queue.put(gathered_data)
-                LOG.debug(f"\n[{system_ac}] {len(gathered_data)} sets of data put into scanner queue @ {get_current_time()}") 
+                LOG.debug(f"[{system_ac}] {len(gathered_data)} sets of data put into scanner queue @ {get_current_time()}")
         finally:
             self.disable_scanning()
 

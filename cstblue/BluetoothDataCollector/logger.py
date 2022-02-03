@@ -17,7 +17,7 @@ LOG = logging.getLogger(__name__)
 console = logging.StreamHandler()
 console.setLevel(LOG_LEVEL)
 
-formatter = logging.Formatter("[%(asctime)s;%(levelname)s] %(message)s")
+formatter = logging.Formatter("[%(asctime)s:%(levelname)s]%(message)s")
 console.setFormatter(formatter)
 
 LOG.addHandler(console)
