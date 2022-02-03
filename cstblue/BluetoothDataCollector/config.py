@@ -16,6 +16,8 @@ PASS = "blueToothTracking_1"
 HOST = "10.24.250.4"
 DB = "blueTooth01"
 
+DATABASE_TABLE = "data"
+
 UNIQUE_ID = "pi_00"
 
 AVERAGE_FREQ = 3

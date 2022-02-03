@@ -52,11 +52,12 @@ class DatabaseWriter:
         
         count = 0
         
+        # TODO: Insert all data in a single SQL statement.
         for bluetooth_object in data.values():
             mac, rssi, time_stamp = bluetooth_object.get_data()
 
             query = f"""
-                        INSERT INTO data VALUES (
+                        INSERT INTO {config.DATABASE_TABLE} VALUES (
                             '{config.UNIQUE_ID}',
                             '{mac}',
                             {rssi},
@@ -73,6 +74,7 @@ class DatabaseWriter:
         LOG.info(f"[{system_ac}] Started reading from database queue @ {get_current_time()}")
         while True:
             data = self.queue.get()
+            LOG.debug(f"[{system_ac}] Read {len(data)} sets of data @ {get_current_time()}")
             self.db_write(data)
 
 

@@ -16,6 +16,10 @@ LOG_LEVEL = logging.DEBUG
 LOG = logging.getLogger(__name__)
 console = logging.StreamHandler()
 console.setLevel(LOG_LEVEL)
+
+formatter = logging.Formatter("[%(asctime)s;%(levelname)s] %(message)s")
+console.setFormatter(formatter)
+
 LOG.addHandler(console)
 LOG.setLevel(LOG_LEVEL)
 PASSWORD = os.environ.get('API_PASSWORD')
