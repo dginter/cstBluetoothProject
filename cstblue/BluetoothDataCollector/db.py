@@ -49,25 +49,10 @@ class DatabaseWriter:
 
     def db_write(self, data):
         """Write bluetooth data into the database."""
-        
-        count = 0
-        
-        # TODO: Insert all data in a single SQL statement.
-        for bluetooth_object in data.values():
-            mac, rssi, time_stamp = bluetooth_object.get_data()
-
-            query = f"""
-                        INSERT INTO {config.DATABASE_TABLE} VALUES (
-                            '{config.UNIQUE_ID}',
-                            '{mac}',
-                            {rssi},
-                            {time_stamp}
-                        )
-                    """
-            self.execute_sql_command(query)
-            count += 1
-            
-        LOG.debug(f"[{system_ac}] {count} sets of data put into database @ {get_current_time()}")
+        bluetooth_data = [bluetooth_object.get_data() for bluetooth_object in data.values()]
+        values = ",\n".join(f"('{config.UNIQUE_ID}', '{mac}', {rssi}, {time})" for mac, rssi, time in bluetooth_data)
+        self.execute_sql_command(f"INSERT INTO data VALUES {values}")
+        LOG.debug(f"[{system_ac}] {len(data)} sets of data put into database @ {get_current_time()}")
 
     def read_from_queue(self):
         """Read from queue given by the controller and write data into the database."""
