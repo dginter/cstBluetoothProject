@@ -21,7 +21,8 @@ class DatabaseWriter:
         """Get connection to the database and get a new one if needed."""
         if self._connection is None or not self._connection.is_connected():
             try:
-                LOG.info(f'[{system_ac}] Attempting to open db connection: {config.USER}@{config.HOST} @ {get_current_time()}')
+                LOG.info(f'[{system_ac}] Attempting to open db connection: {config.USER}@{config.HOST} '
+                         f'@ {get_current_time()}')
                 self._connection = mysql.connector.connect(user=config.USER, password=config.PASS,
                                                            host=config.HOST, database=config.DB)
             except mysql.connector.Error as err:
@@ -51,7 +52,7 @@ class DatabaseWriter:
         """Write bluetooth data into the database."""
         bluetooth_data = [bluetooth_object.get_data() for bluetooth_object in data.values()]
         values = ",\n".join(f"('{config.UNIQUE_ID}', '{mac}', {rssi}, {time})" for mac, rssi, time in bluetooth_data)
-        self.execute_sql_command(f"INSERT INTO data VALUES {values}")
+        self.execute_sql_command(f"INSERT INTO {config.DATABASE_TABLE} VALUES {values}")
         LOG.debug(f"[{system_ac}] {len(data)} sets of data put into database @ {get_current_time()}")
 
     def read_from_queue(self):
