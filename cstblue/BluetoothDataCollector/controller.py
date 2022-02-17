@@ -1,9 +1,15 @@
-from multiprocessing import Manager, Process
 from bluetooth import scanner_worker
-from db import db_worker
-# from bluetooth_scanner import
+from contextlib import nullcontext, suppress
 import math
+from multiprocessing import Manager, Process
+from sqlite3 import connect, OperationalError
+from sys import argv
+from unittest.mock import patch, MagicMock
+
+import config
+from db import db_worker, DatabaseWriter
 from logger import *
+# from bluetooth_scanner import
 
 system_ac = "CTRL"
 
@@ -97,6 +103,23 @@ class Controller:
 
 
 if __name__ == "__main__":
-    bluetooth_processor = Controller()
-    bluetooth_processor.start()
+
+    if len(argv) > 1 and argv[1] == 'sqlite':  # If we provided a command line argument "sqllite", dont use mysql
+        LOG.info('using sqllite databse')
+        connection = connect(f'/tmp/{config.DATABASE_TABLE}.db')
+        with suppress(OperationalError):  # If the table already exists, suppress the error
+            cursor = connection.cursor()
+            cursor.execute(f"CREATE TABLE {config.DATABASE_TABLE} (identifier text, mac_address text, rssi real, time real)")
+            cursor.close()
+            connection.commit()
+        # this patch overrides the get connection function to use the sqllite connection instead
+        cm = patch('db.DatabaseWriter.get_sql_connection', new=MagicMock(return_value=connection))
+    else:
+        LOG.info('using mysql database')
+        cm = nullcontext()  # this makes the "with" statement below work, even though it will do nothing in this case
+
+
+    with cm:
+        bluetooth_processor = Controller()
+        bluetooth_processor.start()
 

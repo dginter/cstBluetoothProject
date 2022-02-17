@@ -41,13 +41,16 @@ class BluetoothScanner(object):
         self.socket.bind((self.device_id,))  # Check out use of Tuple
 
         # allows LE advertising events
-        hci_filter = struct.pack(
-            "<IQH",
-            0x00000010,
-            0x4000000000000000,
-            0
-        )
-        self.socket.setsockopt(SOL_HCI, HCI_FILTER, hci_filter)
+        # hci_filter = struct.pack(
+        #     "<IQH",
+        #     0x00000010,
+        #     0x4000000000000000,
+        #     0
+        # )
+
+        PASS_ALL = struct.pack("IIIh2x", 0xffffffff, 0xffffffff, 0xffffffff, 0)
+
+        self.socket.setsockopt(SOL_HCI, HCI_FILTER, PASS_ALL) #hci_filter)
 
     def set_scan_parameters(self):
         err = bluez.hci_le_set_scan_parameters(self.socket.fileno(), 0, 0x10, 0x10, 0, 0, 1000);
