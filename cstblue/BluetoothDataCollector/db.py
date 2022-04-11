@@ -52,7 +52,7 @@ class DatabaseWriter:
         """Write bluetooth data into the database."""
         bluetooth_data = [bluetooth_object.get_data() for bluetooth_object in data.values()]
         values = ",\n".join(f"('{config.UNIQUE_ID}', '{mac}', {rssi}, {time})" for mac, rssi, time in bluetooth_data)
-        self.execute_sql_command(f"INSERT INTO {config.DATABASE_TABLE} VALUES {values}")
+        self.execute_sql_command(f"INSERT INTO {config.DATABASE_TABLE} (pi_id, mac, rssi, time) VALUES {values}")
         LOG.debug(f"[{system_ac}] {len(data)} sets of data put into database @ {get_current_time()}")
 
     def read_from_queue(self):
