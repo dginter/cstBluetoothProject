@@ -19,7 +19,7 @@ class BluetoothData:
 
     def __init__(self, mac, time_stamp):
         self.MAC = mac
-        self.Time = math.floor(time_stamp)
+        self.Time = time_stamp
         self.RSSI = []
 
     def average_rssi(self):
